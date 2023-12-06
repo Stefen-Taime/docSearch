@@ -4,7 +4,7 @@
 
 Our project is built on a foundation of critical components, each contributing to an efficient and robust data processing system. Here's an overview of the key elements:
 ## Project Reference
-This documentation is based on the original project: [Document Search Engine Architecture](https://github.com/sergio11/document_search_engine_architecture/blob/master/README.md).
+This project is based on the original project: [Document Search Engine Architecture](https://github.com/sergio11/document_search_engine_architecture/blob/master/README.md).
 
 ## 💾 HDFS Cluster
 Our system incorporates a **3-datanode HDFS cluster**, specifically designed for the storage of original files awaiting processing. This arrangement guarantees both dependable data storage and easy access.
