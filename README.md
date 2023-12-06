@@ -6,7 +6,7 @@ Our project is built on a foundation of critical components, each contributing t
 Our project is a testament to this need, offering a comprehensive solution that combines modern technologies and architectures to create a powerful document search engine. This engine is not just a tool but a sophisticated ecosystem designed to handle complex data processing and retrieval tasks.
 
 ## Project Reference
-This project is based on the original project: [Document Search Engine ]([https://github.com/sergio11/document_search_engine/blob/master/README.md](https://github.com/sergio11/document_search_engine_architecture/tree/master)).
+This project is based on the original project: [Document Search Engine ]([https://github.com/sergio11/document_search_engine/blob/master/README.md]
 
 ## 💾 HDFS Cluster
 Our system incorporates a **3-datanode HDFS cluster**, specifically designed for the storage of original files awaiting processing. This arrangement guarantees both dependable data storage and easy access.
