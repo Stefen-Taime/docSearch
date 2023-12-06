@@ -1,7 +1,5 @@
 # Comprehensive Data Processing System: HDFS, Apache Tika, SFTP, NiFi, and More
 
-# Comprehensive Data Processing System: HDFS, Apache Tika, SFTP, NiFi, and More
-
 Our project is built on a foundation of critical components, each contributing to an efficient and robust data processing system. Here's an overview of the key elements:
 
 ## 📂 HDFS Cluster
