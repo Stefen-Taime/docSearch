@@ -4,25 +4,27 @@
 
 Our project is built on a foundation of critical components, each contributing to an efficient and robust data processing system. Here's an overview of the key elements:
 
-## 📂 HDFS Cluster
-We've implemented a **3-datanode HDFS cluster** for storing original files that are ready for processing. This setup ensures reliable data storage and accessibility.
+## 💾 HDFS Cluster
+Our system incorporates a **3-datanode HDFS cluster**, specifically designed for the storage of original files awaiting processing. This arrangement guarantees both dependable data storage and easy access.
 
-## 🌟 Apache Tika
-Utilizing **two versions of Apache Tika servers**, our system is equipped to handle content extraction efficiently. One version includes **OCR capabilities** for extracting text from images and scanned PDFs, broadening our data processing scope.
+## 🔍 Apache Tika
+Our solution leverages **two distinct Apache Tika servers** to streamline content extraction. One of these servers is enhanced with **OCR capabilities**, enabling us to extract text from images and scanned PDF documents, thus expanding our processing capabilities.
 
-## 📤 SFTP Server
-Acting as the initial step in our ETL process, the **SFTP Server** is critical. It functions as the entry point where a microservice uploads files to a shared directory. A dedicated **NiFi processor** then continuously monitors and processes new files.
+## 🚀 SFTP Server
+The **SFTP Server** marks the beginning of our ETL process. It serves as the gateway where a microservice deposits files into a communal directory. These files are then consistently monitored and processed by a specialized **NiFi processor**.
 
-## 🔄 ETL Process
-Our **NiFi ETL process** is a core component. It seamlessly moves files into the HDFS directory, identifies their MIME type, and makes HTTP requests to the appropriate Apache Tika server for metadata and text extraction. The extracted data is subsequently stored in a **MongoDB collection**, with process state updates relayed to **Kafka**.
+## ⚙️ ETL Process
+Central to our system is the **NiFi ETL process**. It efficiently transports files to the HDFS directory, determines their MIME type, and executes HTTP requests to the relevant Apache Tika server for the extraction of metadata and textual content. This extracted information is then preserved in a **MongoDB collection**, and updates on the process state are sent to **Kafka**.
 
-## 🐘 Elasticsearch Integration
-To enhance search capabilities, we sync data to **Elasticsearch** using a **Logstash pipeline**. This integration is vital as MongoDB alone doesn't support advanced search functions.
+## 🔎 Elasticsearch Integration
+We employ a **Logstash pipeline** to synchronize our data with **Elasticsearch**, thereby augmenting our search capabilities. This integration is crucial as MongoDB does not inherently provide extensive search features.
 
-## 📊 Data Exploration Tools
-For data visualization and exploration, we use **MongoDB Express** and **Kibana**. These tools provide a user-friendly interface for analyzing and interpreting indexed data.
+## 📈 Data Exploration Tools
+For the purpose of data exploration and visualization, we utilize **Kibana**. This tool offers an intuitive interface for the analysis and interpretation of indexed data.
 
-## 🌉 API Gateway
+## 🌐 Fast API Connection to Elasticsearch
+Our system includes a **Fast API connection to Elasticsearch**, enabling robust and efficient search queries. This connection is fundamental in powering our advanced document search capabilities.
+
 Our system's integration is streamlined through an **API Gateway microservice**. This uses **Spring Cloud Gateway** to combine all APIs into a single, efficient point of entry.
 
 ## React Web Application
