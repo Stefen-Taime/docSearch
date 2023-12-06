@@ -1,6 +1,6 @@
 # Building a Powerful Document Search Engine: Leveraging HDFS, Apache Tika, SFTP, NiFi, Mongo, Elasticsearch, Logstash, Fast Api, React js
 
-![Architecture](img/architecturedocSearch.png)
+![Architecture](img/searchdiagram.png)
 
 Our project is built on a foundation of critical components, each contributing to an efficient and robust data processing system. Here's an overview of the key elements:
 
