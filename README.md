@@ -25,6 +25,23 @@ We employ a **Logstash pipeline** to synchronize our data with **Elasticsearch**
 For the purpose of data exploration and visualization, we utilize **Kibana**. This tool offers an intuitive interface for the analysis and interpretation of indexed data.
 
 ## 🌐 Fast API Connection to Elasticsearch
+
+## Execution Instructions
+
+To efficiently manage and start the various components of our Document Search Engine Architecture, we use a Makefile with several commands. Here's how to use them:
+
+- **Start Services**: To launch all services and display their URLs, run `make up`. This command starts services like Zookeeper, Kafka, Elasticsearch, and more, and provides their access URLs.
+
+- **Change Permissions for SFTP**: If you need to modify permissions for the SFTP uploads directory, execute `make chmod-sftp`.
+
+- **Execute Commands in Docker Container**: To run specific commands inside the Logstash Docker container, use `make exec-logstash`.
+
+- **Run API**: For starting the Python app in the API directory, which includes installing dependencies, use `make run-api`. This will also display the documentation access URL.
+
+- **Start Frontend Application**: To initiate the frontend application using Docker Compose, execute `make run-front`. This command will inform you about the URL where the frontend is accessible.
+
+- **Clean Up**: To tear down all services and remove unused Docker images, run `make clean-all`. This command ensures that all containers, volumes, and images are appropriately removed.
+
 Our system includes a **Fast API connection to Elasticsearch**, enabling robust and efficient search queries. This connection is fundamental in powering our advanced document search capabilities.
 
 ## React Web Application
