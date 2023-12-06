@@ -1,0 +1,265 @@
+---
+version: '2'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - docsearch 
+
+  broker:
+    image: confluentinc/cp-server:7.5.0
+    hostname: broker
+    container_name: broker
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "9101:9101"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: localhost
+      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:29092
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'true'
+      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+    networks:
+      - docsearch 
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.5.0
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - broker
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+    networks:
+      - docsearch  
+
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:7.5.0
+    hostname: control-center
+    container_name: control-center
+    depends_on:
+      - broker
+      - schema-registry
+    ports:
+      - "9021:9021"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      PORT: 9021
+    networks:
+      - docsearch   
+     
+
+  rest-proxy:
+    image: confluentinc/cp-kafka-rest:7.5.0
+    depends_on:
+      - broker
+      - schema-registry
+    ports:
+      - 8082:8082
+    hostname: rest-proxy
+    container_name: rest-proxy
+    environment:
+      KAFKA_REST_HOST_NAME: rest-proxy
+      KAFKA_REST_BOOTSTRAP_SERVERS: 'broker:29092'
+      KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
+      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+    networks:
+      - docsearch
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.15
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - cluster.name=es-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - docsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.15
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    networks:
+      - docsearch
+
+  namenode:
+    image: apache/hadoop:3
+    hostname: namenode
+    command: ["hdfs", "namenode"]
+    depends_on:
+      - resourcemanager
+      - nodemanager
+    ports:
+      - 9870:9870
+    env_file:
+      - ./config-hadoop
+    environment:
+      ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+    networks:
+      - docsearch
+    volumes:
+      - hadoop:/home/
+    restart: on-failure
+
+  datanode:
+    image: apache/hadoop:3
+    command: ["hdfs", "datanode"]
+    depends_on:
+      - namenode
+    env_file:
+      - ./config-hadoop
+    networks:
+      - docsearch
+    volumes:
+      - hadoop:/home/
+    restart: on-failure
+
+  resourcemanager:
+    image: apache/hadoop:3
+    hostname: resourcemanager
+    command: ["yarn", "resourcemanager"]
+    ports:
+      - 8088:8088
+    env_file:
+      - ./config-hadoop
+    volumes:
+      - ./test.sh:/opt/test.sh
+    networks:
+      - docsearch
+    restart: on-failure
+
+  nodemanager:
+    image: apache/hadoop:3
+    hostname: nodemanager
+    command: ["yarn", "nodemanager"]
+    env_file:
+      - ./config-hadoop
+    networks:
+      - docsearch
+    volumes:
+      - hadoop:/home/
+    restart: on-failure 
+
+  sftp:
+    image: atmoz/sftp
+    container_name: sftp
+    volumes:
+      - ./sftp/users.conf:/etc/sftp/users.conf:ro
+      - ./sftp/uploads:/home/$USER/uploads
+    networks:
+      - docsearch
+    ports:
+      - "2222:22"
+
+  nifi:
+    build: 
+      context: ./nifi
+    container_name: nifi
+    volumes:
+      - 'apache-nifi_data:/apache/nifi'
+    environment:
+      - NIFI_WEB_HTTP_PORT=8080
+      - NIFI_CLUSTER_IS_NODE=true
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8082
+      - NIFI_ZK_CONNECT_STRING=zookeeper:2181
+      - NIFI_ELECTION_MAX_WAIT=1 min
+    networks:
+      - docsearch
+    ports:
+      - '8080:8080'
+
+  tika_server:
+    image: apache/tika:1.24
+    container_name: tika_server
+    networks:
+      - docsearch
+    ports:
+      - "9997:9998"
+
+  # Apache Tika Server with OCR
+  tika_server_ocr:
+    image: apache/tika:1.24-full
+    container_name: tika_server_ocr
+    networks:
+      - docsearch
+    ports:
+      - "9998:9998"
+
+  logstash:
+    build:
+      context: ./logstash
+      dockerfile: Dockerfile
+    container_name: logstash
+    networks:
+        - docsearch
+    volumes:
+      - logstash-data:/usr/share/logstash/data
+      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+    restart: always
+    environment:
+      - "LS_JAVA_OPTS=-Xmx400m -Xms400m"
+
+    
+volumes:
+  esdata1:
+    driver: local
+  hadoop:
+    driver: local
+  apache-nifi_data:
+    driver: local
+  logstash-data:
+    driver: local  
+
+networks:
+  docsearch:
+    driver: bridge
+    external: true
+ 

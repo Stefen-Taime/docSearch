@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  react-app:
+    container_name: react-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '5173:80'  # Mappe le port 5173 de la machine hôte au port 80 du conteneur
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped

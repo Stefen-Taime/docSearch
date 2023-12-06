@@ -1,0 +1,14 @@
+paramiko
+uvicorn 
+inotify-tools
+pyhdfs
+hdfs
+python-multipart
+python-dotenv
+elasticsearch
+fastapi[all]
+
+
+
+
+
