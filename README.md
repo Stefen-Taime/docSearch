@@ -25,6 +25,11 @@ We employ a **Logstash pipeline** to synchronize our data with **Elasticsearch**
 For the purpose of data exploration and visualization, we utilize **Kibana**. This tool offers an intuitive interface for the analysis and interpretation of indexed data.
 
 ## 🌐 Fast API Connection to Elasticsearch
+To enhance the power and flexibility of our document search engine, we've established a **Fast API connection to Elasticsearch**. This integration is a key part of our architecture, enabling swift and sophisticated search queries across the indexed data.
+
+FastAPI, known for its high performance and ease of use, provides an optimal framework for building APIs. It facilitates the creation of robust, efficient endpoints that interact seamlessly with Elasticsearch. This means our system can handle complex search operations, offering features like full-text search, real-time indexing, and analytics capabilities.
+
+This connection not only speeds up the data retrieval process but also allows for the implementation of advanced search functionalities. Users can perform detailed queries, benefiting from Elasticsearch's powerful search and analytics engine, directly through the Fast API endpoints. This setup makes it easier to query and retrieve documents based on a wide range of criteria, enhancing the overall user experience in our document search engine system.
 
 ## Execution Instructions
 
