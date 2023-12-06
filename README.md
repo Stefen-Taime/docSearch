@@ -3,6 +3,8 @@
 ![Architecture](img/searchdiagram.png)
 
 Our project is built on a foundation of critical components, each contributing to an efficient and robust data processing system. Here's an overview of the key elements:
+## Project Reference
+This documentation is based on the original project: [Document Search Engine Architecture](https://github.com/sergio11/document_search_engine_architecture/blob/master/README.md).
 
 ## 💾 HDFS Cluster
 Our system incorporates a **3-datanode HDFS cluster**, specifically designed for the storage of original files awaiting processing. This arrangement guarantees both dependable data storage and easy access.
@@ -24,8 +26,6 @@ For the purpose of data exploration and visualization, we utilize **Kibana**. Th
 
 ## 🌐 Fast API Connection to Elasticsearch
 Our system includes a **Fast API connection to Elasticsearch**, enabling robust and efficient search queries. This connection is fundamental in powering our advanced document search capabilities.
-
-Our system's integration is streamlined through an **API Gateway microservice**. This uses **Spring Cloud Gateway** to combine all APIs into a single, efficient point of entry.
 
 ## React Web Application
 Finally, a **React-based web application** offers a seamless user experience for searching and interacting with the data processed by our system.
